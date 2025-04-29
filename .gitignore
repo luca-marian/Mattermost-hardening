@@ -1,0 +1,35 @@
+# Ignore token and sensitive credentials
+bot_tokens/
+*.token
+password.txt
+open_ssh_key
+
+# Ignore SSH key files
+*.pem
+*.pub
+*.key
+*.crt
+
+# Ignore logs
+*.log
+*.err
+*.out
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary or backup files
+*.bak
+*.tmp
+*~
+
+# Ignore compiled binaries or caches
+__pycache__/
+*.pyc
+*.pyo
+
+# Optional: ignore VS Code config or other editor files
+.vscode/
+.idea/
+*.swp
