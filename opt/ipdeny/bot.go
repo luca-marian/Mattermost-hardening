@@ -64,7 +64,6 @@ func (bot *Bot) handleActions(post *model.Post) (result string, err error) {
 		result, err = bot.IPDelete(actionPayload)
 	}
 
-
 	return result, err
 }
 

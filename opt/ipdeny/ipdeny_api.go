@@ -62,7 +62,6 @@ func getIPDenyData() ([]IP, error) {
     http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
     var result []IP
 
-
     accessToken, err := getKeycloakToken()
     if err != nil {
         return result, err
@@ -138,6 +137,18 @@ func addIP(item string) error {
 }
 
 func deleteIP(id string) error {
+    // 1️⃣ Validate length
+    if len(id) > 10 {
+        return fmt.Errorf("id too long: got %d characters, want ≤ 5", len(id))
+    }
+
+    // 2️⃣ Validate that it contains only digits
+    for _, r := range id {
+        if r < '0' || r > '9' {
+            return fmt.Errorf("id contains invalid character %q: only digits are allowed", r)
+        }
+    }
+
     http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
     accessToken, err := getKeycloakToken()
@@ -145,10 +156,20 @@ func deleteIP(id string) error {
         return err
     }
 
-    client := &http.Client{}
-    url := fmt.Sprintf("%s/%s", IPDENY_API_URL, id)
 
-    req, err := http.NewRequest("DELETE", url, nil)
+    client := &http.Client{}
+
+    // url := fmt.Sprintf("%s/%s", IPDENY_API_URL, id)
+
+    // 5️⃣ Build URL safely
+    u, err := url.Parse(IPDENY_API_URL)
+    if err != nil {
+        return err
+    }
+    u.Path = path.Join(u.Path, id)
+    req, _ := http.NewRequest("DELETE", u.String(), nil)
+
+    // req, err := http.NewRequest("DELETE", url, nil)
     if err != nil {
         fmt.Println("Error creating request:", err)
         return err
