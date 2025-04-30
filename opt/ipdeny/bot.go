@@ -43,25 +43,40 @@ func (bot *Bot) handleActions(post *model.Post) (result string, err error) {
 
 	actionType := words[0]
 	actionPayload := strings.Join(words[1:], " ")
+	maxPayloadLen := 40
+
+	if len(actionPayload) > maxPayloadLen {
+    	return "", BotError{fmt.Sprintf("Error: payload too long")}
+	}
+
+	for _, r := range actionPayload {
+		if !unicode.IsDigit(r) {
+			return "", BotError{fmt.Sprintf("Error: invalid character %q", r)}
+		}
+	}
 
 	switch actionType {
-	case ActionList:
-		// list all
-		result, err = bot.IPList()
-	case ActionAdd:
-		// add <ip>
-		if wordsLen < 2 {
-			err = BotError{fmt.Sprintf("Error: Too few arguments %v - %v\n", wordsLen, words)}
-			return result, err
-		}
-		result, err = bot.IPAdd(actionPayload)
-	case ActionDelete:
-		// delete <entry id>
-		if wordsLen < 2 {
-			err = BotError{fmt.Sprintf("Error: Too few arguments %v - %v\n", wordsLen, words)}
-			return result, err
-		}
-		result, err = bot.IPDelete(actionPayload)
+		case ActionList:
+			// list all
+			if len(actionPayload) > 3 {
+				err = BotError{fmt.Sprintf("Error %v - %v\n", wordsLen, words)}
+				return result, err
+			}
+			result, err = bot.IPList()
+		case ActionAdd:
+			// add <ip>
+			if wordsLen < 2 {
+				err = BotError{fmt.Sprintf("Error: Too few arguments %v - %v\n", wordsLen, words)}
+				return result, err
+			}
+			result, err = bot.IPAdd(actionPayload)
+		case ActionDelete:
+			// delete <entry id>
+			if wordsLen < 2 {
+				err = BotError{fmt.Sprintf("Error: Too few arguments %v - %v\n", wordsLen, words)}
+				return result, err
+			}
+			result, err = bot.IPDelete(actionPayload)
 	}
 
 	return result, err

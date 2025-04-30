@@ -3,6 +3,7 @@ bot_tokens/
 *.token
 password.txt
 open_ssh_key
+ls26_key
 
 # Ignore SSH key files
 *.pem
