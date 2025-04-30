@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 	"github.com/mattermost/mattermost/server/public/model"
+	  "unicode"
+
 )
 
 const (
@@ -49,12 +51,7 @@ func (bot *Bot) handleActions(post *model.Post) (result string, err error) {
     	return "", BotError{fmt.Sprintf("Error: payload too long")}
 	}
 
-	for _, r := range actionPayload {
-		if !unicode.IsDigit(r) {
-			return "", BotError{fmt.Sprintf("Error: invalid character %q", r)}
-		}
-	}
-
+	
 	switch actionType {
 		case ActionList:
 			// list all
@@ -72,6 +69,12 @@ func (bot *Bot) handleActions(post *model.Post) (result string, err error) {
 			result, err = bot.IPAdd(actionPayload)
 		case ActionDelete:
 			// delete <entry id>
+			for _, r := range actionPayload {
+				if !unicode.IsDigit(r) {
+					return "", BotError{fmt.Sprintf("Error: invalid character %q", r)}
+				}
+			}
+
 			if wordsLen < 2 {
 				err = BotError{fmt.Sprintf("Error: Too few arguments %v - %v\n", wordsLen, words)}
 				return result, err

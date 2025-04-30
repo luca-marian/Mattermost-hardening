@@ -9,12 +9,14 @@ import (
     "strings"
     "bytes"
     "fmt"
+    "path"
 )
 
 type IP struct {
     ID    int    `json:"id"`
     IP  string `json:"ip"`
 }
+
 
 func getKeycloakToken() (string, error) {
     http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}

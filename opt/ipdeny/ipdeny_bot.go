@@ -8,7 +8,7 @@ import (
 )
 
 
-var MM_AUTHTOKEN string = "593f1c0f1354d7409c97419946"
+var MM_AUTHTOKEN string = "593f1c0f1354d7409c97419946" 
 var MM_SITEURL string = "https://mattermost.beg.05.berylia.org"
 
 var MM_WSURL string = "wss://mattermost.beg.05.berylia.org"
@@ -25,6 +25,7 @@ var IPDENY_CLIENT_SECRET = "rvKZ08yikGnbLv3o2MMbTXSLRrG07Rjb"
 
 
 var IPDENY_DELAY time.Duration = 10 * time.Minute
+
 
 
 func postIPs(client *ApiClient) {
@@ -71,7 +72,6 @@ func postIPs(client *ApiClient) {
 
 
 func main() {
-
     // create client
     api_client := ApiClient{Url: MM_SITEURL, Token: MM_AUTHTOKEN, Team: MM_TEAM_NAME}
     api_client.Setup()
